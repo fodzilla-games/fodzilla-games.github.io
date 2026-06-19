@@ -523,6 +523,7 @@
   .print-unit .print-line { font-size: 0.85rem; margin-top: 3px; }
   .print-rules {
     margin-top: 24px;
+    break-before: page;
   }
   .print-rules h2 {
     font-family: 'Cinzel', serif;
@@ -1638,13 +1639,23 @@ function renderPrintView() {
       columns.appendChild(leaderEntry);
     }
 
-    Array.from(usedSpecialRules).sort().forEach(name => {
+    function sourceLabel(sources) {
+      const set = new Set(sources);
+      if (set.has('Heavy Infantry') && set.has('Light Infantry')) {
+        set.delete('Heavy Infantry');
+        set.delete('Light Infantry');
+        set.add('Infantry');
+      }
+      return Array.from(set).join(' / ');
+    }
+
+    // Build a single flat list of {sortKey, label, desc} for special rules + upgrades, then alphabetize together
+    const allEntries = [];
+
+    Array.from(usedSpecialRules).forEach(name => {
       const def = SPECIAL_RULES[name];
       if (!def) return;
-      const entry = document.createElement('div');
-      entry.className = 'print-rule-entry';
-      entry.innerHTML = '<strong>' + name + ':</strong> ' + def;
-      columns.appendChild(entry);
+      allEntries.push({ sortKey: name, label: name, desc: def });
     });
 
     // Group upgrade/skill entries by name to detect collisions (same name, different rule text)
@@ -1656,25 +1667,21 @@ function renderPrintView() {
       }
     });
 
-    function sourceLabel(sources) {
-      const set = new Set(sources);
-      if (set.has('Heavy Infantry') && set.has('Light Infantry')) {
-        set.delete('Heavy Infantry');
-        set.delete('Light Infantry');
-        set.add('Infantry');
-      }
-      return Array.from(set).join(' / ');
-    }
-
-    Object.keys(grouped).sort().forEach(name => {
+    Object.keys(grouped).forEach(name => {
       const variants = grouped[name];
       variants.forEach(v => {
         const label = variants.length > 1 ? name + ' (' + sourceLabel(v.sources) + ')' : name;
-        const entry = document.createElement('div');
-        entry.className = 'print-rule-entry';
-        entry.innerHTML = '<strong>' + label + ':</strong> ' + v.desc;
-        columns.appendChild(entry);
+        allEntries.push({ sortKey: name, label: label, desc: v.desc });
       });
+    });
+
+    allEntries.sort((a, b) => a.sortKey.localeCompare(b.sortKey));
+
+    allEntries.forEach(e => {
+      const entry = document.createElement('div');
+      entry.className = 'print-rule-entry';
+      entry.innerHTML = '<strong>' + e.label + ':</strong> ' + e.desc;
+      columns.appendChild(entry);
     });
 
     rulesSection.appendChild(columns);
