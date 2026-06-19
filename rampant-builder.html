@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Lion Rampant Warband Builder</title>
+<title>Rampant Builder</title>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=UnifrakturCook:wght@700&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -44,7 +44,7 @@
   }
   header h1 {
     font-family: 'UnifrakturCook', serif;
-    font-size: clamp(1.8rem, 7vw, 3.6rem);
+    font-size: clamp(2.4rem, 10vw, 5rem);
     font-weight: 700;
     color: var(--rubric);
     margin: 0;
@@ -550,7 +550,7 @@
 <body>
 <div class="wrap" id="mainWrap">
   <header>
-    <h1><span class="h1-line">Lion Rampant</span> <span class="h1-line">Warband Builder</span></h1>
+    <h1><span class="h1-line">Rampant</span> <span class="h1-line">Builder</span></h1>
   </header>
 
   <div class="topbar">
@@ -1431,7 +1431,7 @@ function getWarbandName() {
 }
 
 document.getElementById('exportTxt').addEventListener('click', () => {
-  const name = getWarbandName() || 'Unnamed Retinue';
+  const name = getWarbandName() || 'Your Warband';
   const cap = parseInt(document.getElementById('pointsCap').value, 10);
   const total = roster.reduce((sum, r) => sum + r.cost, 0);
 
@@ -1455,11 +1455,8 @@ document.getElementById('exportTxt').addEventListener('click', () => {
       text += line + '\n';
     });
   }
-  text += '\nTotal: ' + total + ' pts';
-  if (cap > 0) {
-    text += ' / ' + cap + ' pts limit';
-    if (total > cap) text += '  [OVER LIMIT by ' + (total - cap) + ']';
-  }
+  text += '\nPoints: ' + total + (cap > 0 ? ' / ' + cap : '') + ' - Units: ' + roster.length;
+  if (cap > 0 && total > cap) text += ' [OVER LIMIT by ' + (total - cap) + ']';
   text += '\n';
 
   navigator.clipboard.writeText(text).then(() => {
