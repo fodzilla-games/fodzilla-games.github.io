@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Rampant Builder</title>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=UnifrakturCook:wght@700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=UnifrakturCook:wght@700&family=Pirata+One&display=swap" rel="stylesheet">
 <style>
   :root {
     --ink: #2b2420;
@@ -14,6 +14,7 @@
     --gold: #c9a227;
     --green: #4a5a3a;
     --border: #c4b896;
+    --error: #8b1a1a;
   }
   * { box-sizing: border-box; }
   body {
@@ -50,6 +51,11 @@
     margin: 0;
     text-shadow: 1px 1px 0 rgba(0,0,0,0.05);
     line-height: 1.1;
+  }
+  body.dr-theme header h1 {
+    font-family: 'Pirata One', serif;
+    font-size: clamp(2.6rem, 10vw, 5.4rem);
+    font-weight: 400;
   }
   .h1-line { white-space: nowrap; }
   footer {
@@ -92,30 +98,6 @@
     color: var(--ink);
   }
   .topbar input[type="text"] { width: 220px; }
-
-  .seal {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-  }
-  .seal-circle {
-    width: 64px; height: 64px;
-    border-radius: 50%;
-    background: radial-gradient(circle at 35% 30%, #a83232, var(--rubric) 70%, #5e1010 100%);
-    border: 2px solid #5e1010;
-    color: var(--parchment);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    font-family: 'Cinzel', serif;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.3), inset 0 0 12px rgba(0,0,0,0.35);
-    flex-shrink: 0;
-  }
-  .seal-circle .num { font-size: 1.4rem; font-weight: 700; line-height: 1; }
-  .seal-circle .pts { font-size: 0.55rem; letter-spacing: 0.1em; margin-top: 2px; }
-  .seal-text { font-size: 0.85rem; }
-  .seal-text .over { color: var(--rubric); font-weight: 600; }
 
   .layout {
     display: grid;
@@ -219,7 +201,6 @@
   .roster-item { display: flex; flex-direction: column; gap: 4px; padding: 10px 4px; border-bottom: 1px dashed var(--border); }
   .roster-item:last-child { border-bottom: none; }
   .roster-item .ri-top { display: flex; align-items: center; gap: 8px; width: 100%; }
-  .roster-item .ri-name { font-weight: 600; flex-shrink: 0; font-size: 0.92rem; }
   .roster-item .ri-name-input {
     font-family: 'Crimson Text', serif;
     font-weight: 600;
@@ -263,7 +244,7 @@
     font-family: 'Cinzel', serif;
     font-size: 0.95rem;
   }
-  .summary .warn { color: var(--rubric); }
+  .summary .warn { color: var(--error); }
 
   .actions {
     margin: 0 0 22px;
@@ -293,8 +274,8 @@
     cursor: pointer;
   }
   .actions button:hover { background: var(--gold); }
-  .actions button.danger { border-color: var(--rubric); color: var(--rubric); }
-  .actions button.danger:hover { background: var(--rubric); color: var(--parchment); }
+  .actions button.danger { border-color: var(--error); color: var(--error); }
+  .actions button.danger:hover { background: var(--error); color: var(--parchment); }
 
   .inline-upgrades {
     display: grid;
@@ -322,6 +303,8 @@
     align-items: center;
     gap: 4px;
     white-space: nowrap;
+    break-inside: avoid;
+    margin-bottom: 2px;
   }
   .upgrade-check.dimmed { opacity: 0.35; pointer-events: none; }
 
@@ -339,7 +322,7 @@
   .leader-btn:hover { border-color: var(--gold); color: var(--gold); }
   .leader-btn.active { border-color: var(--gold); color: var(--gold); background: rgba(201,162,39,0.12); }
   .banner-btn:hover:not(:disabled) { border-color: var(--rubric); color: var(--rubric); }
-  .banner-btn.active { border-color: var(--rubric); color: var(--rubric); background: rgba(139,26,26,0.08); }
+  .banner-btn.active { border-color: var(--rubric); color: var(--rubric); background: color-mix(in srgb, var(--rubric) 8%, transparent); }
   .banner-btn:disabled { opacity: 0.25; cursor: not-allowed; }
   .remove:hover { border-color: var(--rubric); color: var(--rubric); }
   .expand-btn:hover { background: rgba(0,0,0,0.06); }
@@ -360,41 +343,14 @@
   }
 
   #leaderSkillsList {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(185px, 1fr));
-    gap: 4px 12px;
+    column-width: 185px;
+    column-gap: 16px;
     margin-top: 6px;
     padding: 6px 8px;
     background: rgba(201,162,39,0.07);
     border-radius: 3px;
     border: 1px dashed var(--border);
   }
-  @media (max-width: 500px) {
-    #leaderSkillsList { grid-template-columns: 1fr; }
-  }
-  .skill-row {
-    padding: 3px 2px;
-    border-bottom: none;
-  }
-  .skill-row.dimmed { opacity: 0.4; }
-  .skill-row.chosen { background: rgba(201,162,39,0.08); border-radius: 3px; }
-  .skill-check {
-    display: flex;
-    align-items: baseline;
-    gap: 2px;
-    cursor: pointer;
-    font-size: 0.9rem;
-  }
-  .skill-check input { cursor: pointer; flex-shrink: 0; margin-top: 2px; }
-  .skill-name { font-weight: 600; }
-  .skill-cost { font-family: 'Cinzel', serif; font-size: 0.8rem; color: var(--green); }
-  .skill-desc {
-    font-size: 0.82rem;
-    font-style: italic;
-    color: #5a4f42;
-    margin: 3px 0 0 20px;
-  }
-  .skill-incompat { color: var(--rubric); font-style: normal; }
   .stats-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -543,6 +499,7 @@
   .print-rule-entry strong { font-family: 'Cinzel', serif; }
   .print-spells { margin-top: 24px; }
   .print-spells h2 { font-family: 'Cinzel', serif; font-size: 1.2rem; border-bottom: 1px solid #1a1a1a; padding-bottom: 6px; break-after: avoid; }
+  .print-spells-columns { column-count: 2; column-gap: 16px; }
   .print-spell-colour { break-inside: avoid; margin-bottom: 14px; }
   .print-spell-colour h3 { font-family: 'Cinzel', serif; font-size: 0.95rem; margin: 8px 0 4px; border-bottom: 1px solid #ccc; padding-bottom: 3px; break-after: avoid; }
   .print-spell-entry { font-size: 0.82rem; margin-bottom: 5px; break-inside: avoid; }
@@ -568,56 +525,6 @@
 
   .fantastical-btn { border-color: var(--rubric) !important; color: var(--rubric) !important; }
   .fantastical-btn.active { background: var(--rubric) !important; color: var(--parchment) !important; }
-
-  .fantastical-panel {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 4px 12px;
-    margin-top: 6px;
-    padding: 6px 8px;
-    background: rgba(42,92,42,0.07);
-    border-radius: 3px;
-    border: 1px dashed var(--border);
-  }
-  .fantastical-panel-label {
-    font-family: 'Cinzel', serif;
-    font-size: 0.75rem;
-    color: var(--green);
-    grid-column: 1 / -1;
-  }
-  @media (max-width: 500px) {
-    .fantastical-panel { grid-template-columns: 1fr; }
-  }
-
-  .colours-panel {
-    grid-column: 1 / -1;
-    margin-top: 6px;
-    padding: 6px 8px;
-    background: rgba(42,92,42,0.07);
-    border-radius: 3px;
-    border: 1px dashed var(--border);
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-    align-items: center;
-  }
-  .colours-panel-label {
-    font-family: 'Cinzel', serif;
-    font-size: 0.75rem;
-    color: var(--green);
-    width: 100%;
-  }
-  .colour-chip {
-    font-size: 0.82rem;
-    padding: 2px 8px;
-    border-radius: 12px;
-    border: 1px solid var(--border);
-    background: var(--parchment);
-    cursor: pointer;
-    user-select: none;
-  }
-  .colour-chip.selected { background: var(--green); color: #fff; border-color: var(--green); }
-  .colour-chip.disabled { opacity: 0.35; pointer-events: none; }
 </style>
 </head>
 <body>
@@ -630,8 +537,8 @@
     <div class="field">
       <label for="gameSelect">Game</label>
       <select id="gameSelect" style="font-family:'Crimson Text',serif; font-size:1rem; padding:5px 8px; border:1px solid var(--border); background:var(--parchment); border-radius:3px; color:var(--ink);">
-        <option value="lr2">Lion Rampant 2nd ed.</option>
-        <option value="dr2">Dragon Rampant 2nd ed.</option>
+        <option value="lr2">Lion Rampant</option>
+        <option value="dr2">Dragon Rampant</option>
       </select>
     </div>
     <div class="field">
@@ -649,9 +556,9 @@
     <button id="exportTxt">Copy Text</button>
     <button id="clearAll" class="danger">Clear</button>
     <div class="action-warnings">
-      <div id="leaderWarn" style="display:none; color:var(--rubric); font-size:0.85rem; font-style:italic;">⚠ No Leader nominated — tap ♛ on a unit to designate one.</div>
-      <div id="unitCountWarn" style="display:none; color:var(--rubric); font-size:0.85rem; font-style:italic;"></div>
-      <div id="pointsCapWarn" style="display:none; color:var(--rubric); font-size:0.85rem; font-style:italic;"></div>
+      <div id="leaderWarn" style="display:none; color:var(--error); font-size:0.85rem; font-style:italic;">⚠ No Leader nominated — tap ♛ on a unit to designate one.</div>
+      <div id="unitCountWarn" style="display:none; color:var(--error); font-size:0.85rem; font-style:italic;"></div>
+      <div id="pointsCapWarn" style="display:none; color:var(--error); font-size:0.85rem; font-style:italic;"></div>
     </div>
   </div>
 
@@ -681,7 +588,7 @@
   </div>
 
 
-  <footer><a href="https://www.ospreypublishing.com/uk/lion-rampant-second-edition-9781472852618/" target="_blank" rel="noopener" style="color:inherit;">Lion Rampant</a> is a trademark of Osprey Publishing / Daniel Mersey. This tool is an unofficial player aid.</footer>
+  <footer><a id="footerGameLink" href="https://www.ospreypublishing.com/uk/lion-rampant-second-edition-9781472852618/" target="_blank" rel="noopener" style="color:inherit;">Lion Rampant</a> is a trademark of Osprey Publishing / Daniel Mersey. This tool is an unofficial player aid.</footer>
 </div>
 
 <div id="printView" class="print-view"></div>
@@ -814,8 +721,7 @@ const OPTIONAL_UNITS = {
     {
       name: "Chariots", cost: 6, optional: true,
       stats: { Models: "1–2", Armour: "4", Courage: "4+", Move: "5+", Attack: "5+", Shoot: "–", MaxMove: "10\"", AVDV: "4+/5+", SVRange: "–" },
-      special: "Counter-charge",
-      note: "Optional rule (Ch.3). Use Heavy Cavalry profile +2 pts. Cannot enter rough terrain, cross linear obstacles, or water except at fords. Use Strength Points rules.",
+      special: "Counter-charge, Chariot",
       upgrades: []
     }
   ],
@@ -824,7 +730,6 @@ const OPTIONAL_UNITS = {
       name: "Handgonners", cost: 4, optional: true,
       stats: { Models: "6", Armour: "2", Courage: "4+", Move: "6+", Attack: "7+", Shoot: "8+", MaxMove: "6\"", AVDV: "6/6", SVRange: "6/12\"" },
       special: "Bang!, Panic",
-      note: "Optional rule (Ch.3). Purpose-built firearms profile.",
       upgrades: [
         { name: "Pavises", cost: 2 }
       ]
@@ -833,7 +738,6 @@ const OPTIONAL_UNITS = {
       name: "Slingers", cost: 3, optional: true,
       stats: { Models: "12", Armour: "2", Courage: "4+", Move: "6+", Attack: "7+", Shoot: "6+", MaxMove: "6\"", AVDV: "6/5+", SVRange: "5+/12\"" },
       special: "—",
-      note: "Optional rule (Ch.3). Archers profile –1 pt, range reduced to 12\".",
       upgrades: [
         { name: "Veteran", cost: 2, desc: "Shoot Value becomes 4+.", statOverrides: { SVRange: "4+/12\"" } }
       ]
@@ -885,6 +789,7 @@ const SPECIAL_RULES = {
   "Go Back To Your Farms": "No more than 3 Levied Infantry units may be selected in a 24-point Warband (scaled proportionally for other points values).",
   "Bang!": "All units count as Armour 1 against Shooting by this unit (Armour 2 if in cover).",
   "Panic": "When this unit Shoots, the target unit must take a Courage test regardless of the number of hits inflicted.",
+  "Chariot": "Unit may not enter rough terrain, cross linear obstacles (walls, hedges, etc.), or water features unless at a ford. Fielded with only 1 or 2 models, tracked using the Strength Points rules.",
 };
 
 // Upgrade tooltip definitions (Chapter 2, Unit Upgrade sections)
@@ -1013,6 +918,16 @@ const DR_UNITS = {
   ],
 };
 
+const DR_OPTIONAL_UNITS = {
+  "Foot Units": [
+    { name: "Artillery", cost: 6, optional: true,
+      stats: { Models: "6 SP", Armour: "3", Courage: "4+", Move: "8+", Attack: "–", Shoot: "8+", MaxMove: "4\"", AVDV: "–/6", SVRange: "3+/36\"" },
+      special: "Many!",
+      upgrades: []
+    },
+  ],
+};
+
 const DR_SPECIAL_RULES = {
   "Wild Charge": "If an enemy unit is within this unit's Attack range during the 'Activate Wild Charges' phase, you must test to activate an Attack against it. If unsuccessful, the unit remains stationary but may test for an ordered Move later. Wild Charge may not be used if Battered.",
   "Counter-charge": "When an enemy successfully rolls to Attack this unit, before it moves, this unit may test for a Counter-charge at 7+. If successful, the two units meet midway and both count as Attacking. If it fails, it stands in place. Cannot be used if Battered.",
@@ -1024,6 +939,7 @@ const DR_SPECIAL_RULES = {
   "Skirmish": "As an ordered activation (7+), the unit may make a half Move and Shoot in either order. All models Shoot at -1 to their dice scores.",
   "Evade": "When an enemy successfully rolls to Attack this unit, before it moves, this unit may test to Evade at 7+. If successful, carry out a Skirmish action targeting the Attacker. The charging unit then moves its full distance. If contact is made, the Evading unit's Armour reduces to 1. If Evade fails, unit stands in place and Armour becomes 1 during the Attack. Cannot be used if Battered.",
   "Hard to Target": "This unit counts as Armour 2 versus Shooting and may only be targeted within 12\".",
+  "Many!": "Counts as a Foot unit. Can only fire within a 180-degree arc to the front; must Move to pivot. Cannot enter rough terrain or cross obstacles. A Leader's reroll ability cannot be used by Artillery. No fantastical upgrades allowed.",
   "—": "",
 };
 
@@ -1163,7 +1079,7 @@ function drUpgradeAvailable(upgrade, unitName, isLeader) {
 }
 
 function findDRUnitDef(name) {
-  for (const list of Object.values(DR_UNITS)) {
+  for (const list of [...Object.values(DR_UNITS), ...Object.values(DR_OPTIONAL_UNITS)]) {
     const found = list.find(u => u.name === name);
     if (found) return found;
   }
@@ -1277,7 +1193,16 @@ function renderCategories() {
   const showOptional = document.getElementById('optionalUnits').checked;
 
   if (isDrGame()) {
-    Object.entries(DR_UNITS).forEach(([cat, units]) => {
+    const showOptional = document.getElementById('optionalUnits').checked;
+    const allDR = {};
+    Object.entries(DR_UNITS).forEach(([cat, units]) => { allDR[cat] = [...units]; });
+    if (showOptional) {
+      Object.entries(DR_OPTIONAL_UNITS).forEach(([cat, units]) => {
+        if (allDR[cat]) allDR[cat] = [...allDR[cat], ...units];
+        else allDR[cat] = [...units];
+      });
+    }
+    Object.entries(allDR).forEach(([cat, units]) => {
       const catDiv = document.createElement('div');
       catDiv.className = 'category';
       const h3 = document.createElement('h3');
@@ -1364,7 +1289,7 @@ function renderUnitRow(u, catDiv) {
         const noteLine = document.createElement('div');
         noteLine.className = 'info-line';
         noteLine.style.fontStyle = 'italic';
-        noteLine.style.color = '#8b1a1a';
+        noteLine.style.color = 'var(--error)';
         noteLine.textContent = '⚠ ' + u.note;
         desc.appendChild(noteLine);
       }
@@ -1458,21 +1383,6 @@ function renderUnitRow(u, catDiv) {
       });
 }
 
-// Appends an array of DOM elements to a container in column-major order
-// (so items read alphabetically top-to-bottom, left-to-right in a 2-column grid)
-function appendInColumnOrder(container, elements) {
-  const n = elements.length;
-  const cols = 2;
-  const rows = Math.ceil(n / cols);
-  // Reorder: column 0 first (indices 0..rows-1), then column 1 (rows..2*rows-1), etc.
-  for (let col = 0; col < cols; col++) {
-    for (let row = 0; row < rows; row++) {
-      const idx = col * rows + row;
-      if (idx < n) container.appendChild(elements[idx]);
-    }
-  }
-}
-
 function showBlockedNote(message) {
   const warn = document.getElementById('pointsCapWarn');
   warn.textContent = '⚠ ' + message;
@@ -1493,11 +1403,9 @@ function capValue() {
 
 function addUnit(u) {
   if (isDrGame()) {
-    // DR unit cost limits: max 1 unit costing 6pts; no single unit type >50% of army points
     const cap = capValue();
-    const sixPtCount = roster.filter(r => r.baseCost >= 6).length;
-    if (u.cost >= 6 && sixPtCount >= 1) {
-      showBlockedNote('Only one unit costing 6 army points allowed per Warband.');
+    if (u.name === 'Artillery' && roster.some(r => r.name === 'Artillery')) {
+      showBlockedNote('Only one unit of Artillery is allowed per Warband.');
       return;
     }
     if (cap > 0 && currentTotal() + u.cost > cap) {
@@ -1661,6 +1569,9 @@ function renderRoster() {
             item.fantasticalUpgrades = [];
             item.coloursOfMagic = [];
             recalcCost(item);
+          } else {
+            // Ensure the upgrade panel is open so the fantastical section is visible
+            item.upgradesOpen = true;
           }
           renderRoster();
         });
@@ -1793,15 +1704,15 @@ function renderRoster() {
           const fantWrap = document.createElement('div');
           fantWrap.style.cssText = 'grid-column:1/-1; display:' + (item.fantasticalOpen ? '' : 'none') + ';';
 
-          // Inner grid matching upWrap layout
-          const fantGrid = document.createElement('div');
-          fantGrid.style.cssText = 'display:grid; grid-template-columns:repeat(auto-fill,minmax(185px,1fr)); gap:4px 12px;';
-
+          // Label (full width) followed by a native multi-column flow container
           const fantLabel = document.createElement('span');
           fantLabel.className = 'inline-upgrades-label';
-          fantLabel.style.cssText = 'grid-column:1/-1; margin-top:4px;';
+          fantLabel.style.cssText = 'display:block; margin-top:4px;';
           fantLabel.textContent = 'Fantastical Rules:';
-          fantGrid.appendChild(fantLabel);
+          fantWrap.appendChild(fantLabel);
+
+          const fantGrid = document.createElement('div');
+          fantGrid.style.cssText = 'column-width:185px; column-gap:12px;';
 
           const sortedFant = [...DR_FANTASTICAL_UPGRADES].sort((a, b) => a.name.localeCompare(b.name));
           const fantRows = [];
@@ -1809,7 +1720,13 @@ function renderRoster() {
             const isChosen = (item.fantasticalUpgrades || []).some(u => u.name === fu.name);
             const available = drUpgradeAvailable(fu, item.name, item.isLeader);
             const incompatChosen = fu.incompatibleWith && fu.incompatibleWith.some(n => (item.fantasticalUpgrades || []).some(u => u.name === n));
-            const disabled = !available || (incompatChosen && !isChosen);
+            const cap = capValue();
+            const max1p24Exceeded = !isChosen && fu.max1per24 && (() => {
+              const allowed = cap >= 24 ? Math.floor(cap / 24) : 0;
+              const current = roster.reduce((n, r) => n + ((r.fantasticalUpgrades || []).some(u => u.name === fu.name) ? 1 : 0), 0);
+              return current >= allowed;
+            })();
+            const disabled = !available || (incompatChosen && !isChosen) || max1p24Exceeded;
 
             const row = document.createElement('div');
             row.className = 'upgrade-check' + (disabled ? ' dimmed' : '');
@@ -1825,6 +1742,20 @@ function renderRoster() {
                   cb.checked = false;
                   showBlockedNote('Cannot add ' + fu.name + ' (+' + fu.cost + ' pts) — would exceed the ' + cap + '-point limit.');
                   return;
+                }
+                if (fu.max1per24) {
+                  const allowed = cap >= 24 ? Math.floor(cap / 24) : 0;
+                  const current = roster.reduce((n, r) => n + ((r.fantasticalUpgrades || []).some(u => u.name === fu.name) ? 1 : 0), 0);
+                  if (allowed === 0) {
+                    cb.checked = false;
+                    showBlockedNote(fu.name + ' requires at least 24 army points to select.');
+                    return;
+                  }
+                  if (current >= allowed) {
+                    cb.checked = false;
+                    showBlockedNote(fu.name + ' is limited to ' + allowed + ' per ' + (allowed * 24) + ' army points (' + current + ' already selected).');
+                    return;
+                  }
                 }
                 if (!item.fantasticalUpgrades) item.fantasticalUpgrades = [];
                 item.fantasticalUpgrades.push(fu);
@@ -1859,20 +1790,21 @@ function renderRoster() {
             row.appendChild(wrap);
             fantRows.push(row);
           });
-          appendInColumnOrder(fantGrid, fantRows);
+          fantRows.forEach(row => fantGrid.appendChild(row));
           fantWrap.appendChild(fantGrid);
 
           // Colours of magic section
           const spellLevel = (item.fantasticalUpgrades || []).find(u => u.name.startsWith('Spellcaster'));
           if (spellLevel) {
             const level = parseInt(spellLevel.name.replace('Spellcaster (Level ', '').replace(')', ''));
-            const colGrid = document.createElement('div');
-            colGrid.style.cssText = 'display:grid; grid-template-columns:repeat(auto-fill,minmax(185px,1fr)); gap:4px 12px; margin-top:4px;';
             const colLabel = document.createElement('span');
             colLabel.className = 'inline-upgrades-label';
-            colLabel.style.cssText = 'grid-column:1/-1;';
+            colLabel.style.cssText = 'display:block; margin-top:4px;';
             colLabel.textContent = 'Colour(s) of Magic (choose ' + level + '):';
-            colGrid.appendChild(colLabel);
+            fantWrap.appendChild(colLabel);
+
+            const colGrid = document.createElement('div');
+            colGrid.style.cssText = 'column-width:185px; column-gap:12px;';
 
             const colourRows = [];
             [...DR_COLOURS_OF_MAGIC].sort().forEach(colour => {
@@ -1914,7 +1846,7 @@ function renderRoster() {
               row.appendChild(colourWrap);
               colourRows.push(row);
             });
-            appendInColumnOrder(colGrid, colourRows);
+            colourRows.forEach(row => colGrid.appendChild(row));
             fantWrap.appendChild(colGrid);
           }
 
@@ -1978,7 +1910,7 @@ function updateTotals() {
 
   const capLabel = document.getElementById('capLabel');
   if (cap > 0) {
-    capLabel.innerHTML = '/ ' + cap + (total > cap ? ' <span style="color:var(--rubric);font-weight:600;">[' + (total - cap) + ' over]</span>' : '');
+    capLabel.innerHTML = '/ ' + cap + (total > cap ? ' <span style="color:var(--error);font-weight:600;">[' + (total - cap) + ' over]</span>' : '');
   } else {
     capLabel.textContent = '';
   }
@@ -1997,7 +1929,12 @@ function updateTotals() {
   if (isDrGame()) {
     const minUnits = cap >= 36 ? 6 : 4;
     const maxUnits = cap >= 36 ? 18 : 12;
-    if (count > 0 && count < minUnits) {
+    // Check for units outside the 1–10pt cost range
+    const badCostUnit = roster.find(r => r.cost < 1 || r.cost > 10);
+    if (badCostUnit) {
+      countWarn.textContent = '⚠ "' + (badCostUnit.customName || badCostUnit.name) + '" costs ' + badCostUnit.cost + ' pts — units must cost between 1 and 10 army points.';
+      countWarn.style.display = 'block';
+    } else if (count > 0 && count < minUnits && cap >= 24) {
       countWarn.textContent = '⚠ Warband must have at least ' + minUnits + ' units (' + (minUnits - count) + ' more needed).';
       countWarn.style.display = 'block';
     } else if (count > maxUnits) {
@@ -2007,7 +1944,7 @@ function updateTotals() {
       countWarn.style.display = 'none';
     }
   } else {
-    if (count > 0 && count < 4) {
+    if (count > 0 && count < 4 && cap >= 24) {
       countWarn.textContent = '⚠ Warband must have at least 4 units (' + (4 - count) + ' more needed).';
       countWarn.style.display = 'block';
     } else if (count > 10) {
@@ -2110,12 +2047,32 @@ function renderLeaderSkills() {
     row.appendChild(tipWrap);
     skillRows.push(row);
   });
-  appendInColumnOrder(container, skillRows);
+  skillRows.forEach(row => container.appendChild(row));
 }
 document.getElementById('pointsCap').addEventListener('input', () => {
-  updateTotals();
-  saveWarband();
+  revalidateMax1Per24();
+  renderRoster();
 });
+
+function revalidateMax1Per24() {
+  if (!isDrGame()) return;
+  const cap = capValue();
+  const allowed = cap >= 24 ? Math.floor(cap / 24) : 0;
+  // For each max1per24 upgrade name, find every unit that has it (in roster order) and strip any beyond the allowance
+  const seenCounts = {};
+  roster.forEach(item => {
+    if (!item.fantasticalUpgrades || !item.fantasticalUpgrades.length) return;
+    item.fantasticalUpgrades = item.fantasticalUpgrades.filter(fu => {
+      if (!fu.max1per24) return true;
+      seenCounts[fu.name] = (seenCounts[fu.name] || 0) + 1;
+      if (seenCounts[fu.name] > allowed) {
+        return false; // strip this selection — exceeds the new allowance
+      }
+      return true;
+    });
+    recalcCost(item);
+  });
+}
 
 document.getElementById('clearAll').addEventListener('click', () => {
   roster = [];
@@ -2425,6 +2382,8 @@ function renderPrintView() {
       spellSection.appendChild(h2);
 
       // Render colours in canonical order, only those selected
+      const spellCols = document.createElement('div');
+      spellCols.className = 'print-spells-columns';
       DR_COLOURS_OF_MAGIC.filter(c => usedColours.has(c)).forEach(colour => {
         const spells = DR_SPELLS[colour] || [];
         const colDiv = document.createElement('div');
@@ -2448,8 +2407,9 @@ function renderPrintView() {
           colDiv.appendChild(entry);
         });
 
-        spellSection.appendChild(colDiv);
+        spellCols.appendChild(colDiv);
       });
+      spellSection.appendChild(spellCols);
 
       view.appendChild(spellSection);
     }
@@ -2520,12 +2480,17 @@ document.getElementById('gameSelect').addEventListener('change', () => {
 });
 
 function applyGameTheme() {
+  const footerLink = document.getElementById('footerGameLink');
   if (isDrGame()) {
     document.body.classList.add('dr-theme');
     document.getElementById('leaderSkillsSection').style.display = 'none';
+    footerLink.textContent = 'Dragon Rampant';
+    footerLink.href = 'https://www.ospreypublishing.com/uk/dragon-rampant-second-edition-9781472868640/';
   } else {
     document.body.classList.remove('dr-theme');
     document.getElementById('leaderSkillsSection').style.display = '';
+    footerLink.textContent = 'Lion Rampant';
+    footerLink.href = 'https://www.ospreypublishing.com/uk/lion-rampant-second-edition-9781472852618/';
   }
 }
 
